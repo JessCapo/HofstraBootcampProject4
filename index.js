@@ -13,3 +13,10 @@ const PORT = process.env.PORT || 3000;
 const DB_NAME = 'behavioral_db'; 
 
 const app = express();
+
+// Middleware
+app.use(cors()); // Allows frontend running on different port to connect
+app.use(express.json()); // Parses incoming JSON data
+
+// Global MongoDB Client
+let db;

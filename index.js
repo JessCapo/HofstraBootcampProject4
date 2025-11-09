@@ -66,7 +66,7 @@ app.post('/api/qa-log', async (req, res) => {
             return res.status(503).json({ message: "Database connection not available." });
         }
         
-        // 5. Insert data into the 'qa_logs' collection
+        // Insert data into the 'qa_logs' collection
         await db.collection('qa_logs').insertOne({
             ...logData,
             createdAt: new Date()

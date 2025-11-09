@@ -33,3 +33,27 @@ async function connectToMongo() {
         process.exit(1); 
     }
 }
+
+//API Endpoints
+// POST /api/intake: Handles the Intake Form Submission
+app.post('/api/intake', async (req, res) => {
+    const intakeData = req.body;
+    try {
+        if (!db) {
+            return res.status(503).json({ message: "Database connection not available." });
+        }
+        
+        // Insert data into the 'intakes' collection
+        const result = await db.collection('intakes').insertOne({
+            ...intakeData,
+            createdAt: new Date()
+        });
+        
+        // Success response
+        res.status(201).json({ message: "Intake saved successfully", id: result.insertedId });
+
+    } catch (error) {
+        console.error("Error saving intake data:", error);
+        res.status(500).json({ message: "Failed to save intake data." });
+    }
+});

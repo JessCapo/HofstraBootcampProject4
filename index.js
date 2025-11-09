@@ -57,3 +57,31 @@ app.post('/api/intake', async (req, res) => {
         res.status(500).json({ message: "Failed to save intake data." });
     }
 });
+
+// POST /api/qa-log: Handles logging the Q&A transaction
+app.post('/api/qa-log', async (req, res) => {
+    const logData = req.body;
+    try {
+        if (!db) {
+            return res.status(503).json({ message: "Database connection not available." });
+        }
+        
+        // 5. Insert data into the 'qa_logs' collection
+        await db.collection('qa_logs').insertOne({
+            ...logData,
+            createdAt: new Date()
+        });
+
+        res.status(200).json({ message: "Q&A Logged." });
+
+    } catch (error) {
+        console.error("Error saving Q&A log:", error);
+        res.status(500).json({ message: "Failed to log QA session." });
+    }
+});
+
+// Start the server only after connecting to the database
+connectToMongo().then(() => {
+    app.listen(PORT, () => {console.log(`Server running on port ${PORT}`);
+    });
+});

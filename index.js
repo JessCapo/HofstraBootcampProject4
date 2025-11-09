@@ -20,3 +20,16 @@ app.use(express.json()); // Parses incoming JSON data
 
 // Global MongoDB Client
 let db;
+
+// Connect to MongoDB (main secure connection logic)
+async function connectToMongo() {
+    try {
+        const client = await MongoClient.connect(MONGODB_URI);
+        db = client.db(DB_NAME);
+        console.log(`Successfully connected to MongoDB database: ${DB_NAME}`);
+    } catch (error) {
+        console.error("FAILED TO CONNECT TO MONGODB:", error);
+        // Exit process if database connection fails, as the server is useless without it
+        process.exit(1); 
+    }
+}
